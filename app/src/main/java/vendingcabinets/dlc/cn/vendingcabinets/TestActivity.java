@@ -1,20 +1,13 @@
 package vendingcabinets.dlc.cn.vendingcabinets;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
+import cn.dlc.fbrtest.R;
 import java.util.List;
-import java.util.logging.Logger;
-
 import vendingcabinets.dlc.cn.vendingcabinets.base.ICommonCallback;
 import vendingcabinets.dlc.cn.vendingcabinets.base.exception.DLCException;
 import vendingcabinets.dlc.cn.vendingcabinets.base.serialport.blockingqueue.Priority;
