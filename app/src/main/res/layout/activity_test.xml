@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="选择地址:" />
+
+            <Spinner
+                android:id="@+id/spacer"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:entries="@array/spingarr"
+                android:gravity="center"></Spinner>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="电机编号:" />
+
+            <EditText
+                android:id="@+id/et_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:minWidth="100dp"
+                android:text="01" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="应答帧选择命令码:" />
+
+            <Spinner
+                android:id="@+id/spacer2"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:entries="@array/spingarr2"
+                android:gravity="center"></Spinner>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="应答帧"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="285dp" />
+
+        <Button
+            android:id="@+id/button_testing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试单个驱动单元 "
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="285dp" />
+
+        <Button
+            android:id="@+id/button_testing_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试整柜驱动单元 "
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="285dp" />
+
+        <Button
+            android:id="@+id/button_cargoTrackScanning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="货道扫描"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="285dp" />
+
+        <Button
+            android:id="@+id/button_sellingGoods"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="出售商品"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="285dp" />
+
+        <Button
+            android:id="@+id/button_slaveStateQuery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="从机状态查询"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="285dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="探头编号:" />
+
+
+            <Spinner
+                android:id="@+id/spacer3"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:entries="@array/spingarr3"
+                android:gravity="center"></Spinner>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="温度最小值:" />
+
+            <EditText
+                android:id="@+id/et_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:minWidth="100dp"
+                android:text="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="温度最大值:" />
+
+            <EditText
+                android:id="@+id/et_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:minWidth="100dp"
+                android:text="10" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_setTemperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="温度设置"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="285dp" />
+
+        <Button
+            android:id="@+id/button_temperatureQuery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="温度查询"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="285dp" />
+
+        <Button
+            android:id="@+id/button_firmwareVersionQuery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="固件版本查询"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="285dp" />
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="是否开启光检" />
+
+        <Button
+            android:id="@+id/button_photometricControl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="光检控制"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="285dp" />
+    </LinearLayout>
+</ScrollView>
