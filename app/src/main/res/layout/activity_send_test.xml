@@ -100,7 +100,7 @@
             <Button
                 android:id="@+id/btn_2"
                 style="@style/ButtonStyle"
-                android:text="添加应答帧选择命令码" />
+                android:text="添加测试单个驱动单元" />
 
         </LinearLayout>
 

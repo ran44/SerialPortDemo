@@ -130,7 +130,7 @@ public class TestSendActivity extends BaseActivity implements AdapterView.OnItem
                 break;
             case R.id.btn_2:
                 byte[] allData = VendingMachineAACmdFactory.testingSingleDrivers(1, 1);
-                mEtData.setText(ByteUtil.bytes2HexStr(data));
+                mEtData.setText(ByteUtil.bytes2HexStr(allData));
                 break;
                 default:
         }
