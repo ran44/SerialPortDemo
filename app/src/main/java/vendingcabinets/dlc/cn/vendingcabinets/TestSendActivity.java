@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.dlc.fbrtest.R;
@@ -82,8 +83,8 @@ public class TestSendActivity extends BaseActivity implements AdapterView.OnItem
         // 设备
         mDevices = serialPortFinder.getAllDevicesPath();
         if (mDevices.length == 0) {
-            mDevices = new String[] {
-                getString(R.string.no_serial_device)
+            mDevices = new String[]{
+                    getString(R.string.no_serial_device)
             };
         }
         // 波特率
@@ -115,7 +116,9 @@ public class TestSendActivity extends BaseActivity implements AdapterView.OnItem
         mSpinnerBaudrate.setSelection(mBaudrateIndex);
     }
 
-    @OnClick({ R.id.btn_open_device, R.id.btn_send_data, R.id.btn_1, R.id.btn_2 })
+    @OnClick({R.id.btn_open_device, R.id.btn_send_data, R.id.btn_1,
+            R.id.btn_2, R.id.btn_3, R.id.btn_4, R.id.btn_5, R.id.btn_6, R.id.btn_7,
+            R.id.btn_8, R.id.btn_9, R.id.btn_10})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_open_device:
@@ -132,7 +135,39 @@ public class TestSendActivity extends BaseActivity implements AdapterView.OnItem
                 byte[] allData = VendingMachineAACmdFactory.testingSingleDrivers(1, 1);
                 mEtData.setText(ByteUtil.bytes2HexStr(allData));
                 break;
-                default:
+            case R.id.btn_3:
+                byte[] testingCabinetDriveData = VendingMachineAACmdFactory.testingCabinetDrive(1);
+                mEtData.setText(ByteUtil.bytes2HexStr(testingCabinetDriveData));
+                break;
+            case R.id.btn_4:
+                byte[] cargoTrackScanningData = VendingMachineAACmdFactory.cargoTrackScanning(1);
+                mEtData.setText(ByteUtil.bytes2HexStr(cargoTrackScanningData));
+                break;
+            case R.id.btn_5:
+                byte[] sellingGoodsData = VendingMachineAACmdFactory.sellingGoods(1, 1);
+                mEtData.setText(ByteUtil.bytes2HexStr(sellingGoodsData));
+                break;
+            case R.id.btn_6:
+                byte[] slaveStateQueryData = VendingMachineAACmdFactory.slaveStateQuery(1);
+                mEtData.setText(ByteUtil.bytes2HexStr(slaveStateQueryData));
+                break;
+            case R.id.btn_7:
+                byte[] setTemperatureData = VendingMachineAACmdFactory.setTemperature(1, 1, 55, 1);
+                mEtData.setText(ByteUtil.bytes2HexStr(setTemperatureData));
+                break;
+            case R.id.btn_8:
+                byte[] temperatureQueryData = VendingMachineAACmdFactory.temperatureQuery(1, 1);
+                mEtData.setText(ByteUtil.bytes2HexStr(temperatureQueryData));
+                break;
+            case R.id.btn_9:
+                byte[] firmwareVersionQueryData = VendingMachineAACmdFactory.firmwareVersionQuery(1);
+                mEtData.setText(ByteUtil.bytes2HexStr(firmwareVersionQueryData));
+                break;
+            case R.id.btn_10:
+                byte[] photometricControlData = VendingMachineAACmdFactory.photometricControl(1, 1);
+                mEtData.setText(ByteUtil.bytes2HexStr(photometricControlData));
+                break;
+            default:
         }
     }
 

@@ -58,8 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/horizontal_margin"
-            android:text="@string/open_serial_port"
-             />
+            android:text="@string/open_serial_port" />
 
 
     </LinearLayout>
@@ -71,38 +70,85 @@
         android:orientation="horizontal"
         tools:context="com.licheedev.serialtool.activity.MainActivity">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
 
-            <EditText
-                android:id="@+id/et_data"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/default_button_height"
-                android:digits="0123456789abcdefABCDEF"
-                android:hint="@string/input_data"
-                android:inputType="textCapCharacters"
-                android:singleLine="true"
-                android:textSize="@dimen/edit_text_size" />
+                <EditText
+                    android:id="@+id/et_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/default_button_height"
+                    android:digits="0123456789abcdefABCDEF"
+                    android:hint="@string/input_data"
+                    android:inputType="textCapCharacters"
+                    android:singleLine="true"
+                    android:textSize="@dimen/edit_text_size" />
 
-            <Button
-                android:id="@+id/btn_send_data"
-                style="@style/ButtonStyle"
-                android:text="@string/send_data" />
+                <Button
+                    android:id="@+id/btn_send_data"
+                    style="@style/ButtonStyle"
+                    android:text="@string/send_data" />
 
-            <Button
-                android:id="@+id/btn_1"
-                style="@style/ButtonStyle"
-                android:text="刷新应答帧选择命令码" />
-            <Button
-                android:id="@+id/btn_2"
-                style="@style/ButtonStyle"
-                android:text="添加测试单个驱动单元" />
+                <Button
+                    android:id="@+id/btn_1"
+                    style="@style/ButtonStyle"
+                    android:text="刷新应答帧选择命令码" />
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/btn_2"
+                    style="@style/ButtonStyle"
+                    android:text="刷新测试单个驱动单元命令码" />
+
+                <Button
+                    android:id="@+id/btn_3"
+                    style="@style/ButtonStyle"
+                    android:text="刷新整柜驱动单元命令码" />
+
+                <Button
+                    android:id="@+id/btn_4"
+                    style="@style/ButtonStyle"
+                    android:text="刷新货道扫描命令码" />
+
+                <Button
+                    android:id="@+id/btn_5"
+                    style="@style/ButtonStyle"
+                    android:text="刷新出售商品命令码" />
+
+                <Button
+                    android:id="@+id/btn_6"
+                    style="@style/ButtonStyle"
+                    android:text="刷新从机状态查询命令码" />
+
+                <Button
+                    android:id="@+id/btn_7"
+                    style="@style/ButtonStyle"
+                    android:text="刷新温度设置命令码" />
+
+                <Button
+                    android:id="@+id/btn_8"
+                    style="@style/ButtonStyle"
+                    android:text="刷新温度查询命令码" />
+
+                <Button
+                    android:id="@+id/btn_9"
+                    style="@style/ButtonStyle"
+                    android:text="刷新固件版本查询命令码" />
+
+                <Button
+                    android:id="@+id/btn_10"
+                    style="@style/ButtonStyle"
+                    android:text="光检控制命令码 " />
+
+            </LinearLayout>
+        </ScrollView>
+
 
         <include
             layout="@layout/include_fragment_container"

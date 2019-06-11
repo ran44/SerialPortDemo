@@ -13,10 +13,10 @@ import vendingcabinets.dlc.cn.vendingcabinets.vendingmachine.vendingmachineaa.be
  */
 public class VendingMachineAACmdFactory {
     private static byte[] allCmd(byte cmd, byte frameLength, int cabinetAddress, String data) {
-        byte[] frameHeaderByte = { VendingMachineAAProtocol.FRAME_HEADER };
-        byte[] commandByte = { cmd };
-        byte[] frameLengthByte = { frameLength };
-        byte[] frameTailByte = { VendingMachineAAProtocol.FRAME_TAIL };
+        byte[] frameHeaderByte = {VendingMachineAAProtocol.FRAME_HEADER};
+        byte[] commandByte = {cmd};
+        byte[] frameLengthByte = {frameLength};
+        byte[] frameTailByte = {VendingMachineAAProtocol.FRAME_TAIL};
         String frameHeader = ByteUtil.bytes2HexStr(frameHeaderByte);
         String command = ByteUtil.bytes2HexStr(commandByte);
         String number = ByteUtil.integer2HexStr(getNumber());
@@ -26,14 +26,14 @@ public class VendingMachineAACmdFactory {
         String notHeaderAndTailStr = strCabinetAddress + number + strFrameLength + command + data;
         String cRc = CheckUtil.getXOR(ByteUtil.hexStr2bytes(notHeaderAndTailStr));
         CmdBean.Builder builder = CmdBean.newBuilder()
-            .setFrameHeader(frameHeader)
-            .setCabinetAddress(strCabinetAddress)
-            .setCommand(command)
-            .setNumber(number)
-            .setCRC(cRc)
-            .setFrameLength(strFrameLength)
-            .setFrameTail(frameTail)
-            .setData(data);
+                .setFrameHeader(frameHeader)
+                .setCabinetAddress(strCabinetAddress)
+                .setCommand(command)
+                .setNumber(number)
+                .setCRC(cRc)
+                .setFrameLength(strFrameLength)
+                .setFrameTail(frameTail)
+                .setData(data);
         DLCLog.d("发送:" + builder.toString());
         return builder.build();
     }
@@ -115,8 +115,9 @@ public class VendingMachineAACmdFactory {
      * B5     ——  电机编号
      * B6     ——  校验码
      */
-    public static byte[] sellingGoods(int cabinetAddress, String data) {
-        return allCmd(VendingMachineAAProtocol.SELLING_GOODS_HTS, VendingMachineAAProtocol.SIX_LEN, cabinetAddress, data);
+    public static byte[] sellingGoods(int cabinetAddress, int motorNumber) {
+        String strMotorNumber = ByteUtil.integer2HexStr(motorNumber);
+        return allCmd(VendingMachineAAProtocol.SELLING_GOODS_HTS, VendingMachineAAProtocol.SIX_LEN, cabinetAddress, strMotorNumber);
     }
 
     /**
@@ -142,7 +143,11 @@ public class VendingMachineAACmdFactory {
      * B7     ——  最大值
      * B8     ——  校验码
      */
-    public static byte[] setTemperature(int cabinetAddress, String data) {
+    public static byte[] setTemperature(int cabinetAddress, int minimum, int maximum, int probeNumber) {
+        String maxi = ByteUtil.integer2HexStr(maximum);
+        String mini = ByteUtil.integer2HexStr(minimum);
+        String strProbeNumber = ByteUtil.integer2HexStr(probeNumber);
+        String data = strProbeNumber + mini + maxi;
         return allCmd(VendingMachineAAProtocol.TEMPERATURE_SET_HTS, VendingMachineAAProtocol.EIGHT_LEN, cabinetAddress, data);
     }
 
@@ -155,7 +160,8 @@ public class VendingMachineAACmdFactory {
      * B5     ——  探头编号   1 - 4        1-2：制冷     3-4：制热
      * B6     ——  校验码
      */
-    public static byte[] temperatureQuery(int cabinetAddress, String data) {
+    public static byte[] temperatureQuery(int cabinetAddress, int probeNumber) {
+        String data = ByteUtil.integer2HexStr(probeNumber);
         return allCmd(VendingMachineAAProtocol.TEMPERATURE_QUERY_HTS, VendingMachineAAProtocol.SIX_LEN, cabinetAddress, data);
     }
 
@@ -182,7 +188,8 @@ public class VendingMachineAACmdFactory {
      * 1：开启光检
      * B6     ——  校验码
      */
-    public static byte[] photometricControl(int cabinetAddress, String data) {
+    public static byte[] photometricControl(int cabinetAddress, int candling) {
+        String data = ByteUtil.integer2HexStr(candling);
         return allCmd(VendingMachineAAProtocol.PHOTOMETRIC_CONTROL_HTS, VendingMachineAAProtocol.SIX_LEN, cabinetAddress, data);
     }
 }

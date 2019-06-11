@@ -8,8 +8,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import cn.dlc.fbrtest.R;
+
 import java.util.List;
+
 import vendingcabinets.dlc.cn.vendingcabinets.base.ICommonCallback;
 import vendingcabinets.dlc.cn.vendingcabinets.base.exception.DLCException;
 import vendingcabinets.dlc.cn.vendingcabinets.base.serialport.blockingqueue.Priority;
@@ -50,7 +53,7 @@ public class TestActivity extends CustomAdaptActivity {
                 VendingMachineAAProxy.get().responseFrame(Priority.DEFAULT, cabinetAddress, number, new ICommonCallback<String>() {
                     @Override
                     public void onSuccess(String s) {
-                        Log.d("DLCLog:",  "应答帧:" + FastJsonUtil.toJSONString(s));
+                        Log.d("DLCLog:", "应答帧:" + FastJsonUtil.toJSONString(s));
                     }
 
                     @Override
@@ -66,19 +69,20 @@ public class TestActivity extends CustomAdaptActivity {
                 //测试单个驱动单元
                 //                Toast.makeText(TestActivity.this, spacer.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
                 int cabinetAddress = Integer.parseInt(spacer.getSelectedItem().toString());
+                int number = Integer.parseInt(et_number.getText().toString());
                 VendingMachineAAProxy.get()
-                    .testingSingleDrivers(Priority.DEFAULT, cabinetAddress, et_number.getText().toString(), new ICommonCallback<TestingSingleBean>() {
+                        .testingSingleDrivers(Priority.DEFAULT, cabinetAddress, number, new ICommonCallback<TestingSingleBean>() {
 
-                        @Override
-                        public void onSuccess(TestingSingleBean testingSingleBean) {
-                            Log.d("DLCLog:", "测试单个驱动单元:" + FastJsonUtil.toJSONString(testingSingleBean));
-                        }
+                            @Override
+                            public void onSuccess(TestingSingleBean testingSingleBean) {
+                                Log.d("DLCLog:", "测试单个驱动单元:" + FastJsonUtil.toJSONString(testingSingleBean));
+                            }
 
-                        @Override
-                        public void onFailed(DLCException dLCException) {
-                            Log.d("DLCLog:",  "测试单个驱动单元:" + dLCException.toString());
-                        }
-                    });
+                            @Override
+                            public void onFailed(DLCException dLCException) {
+                                Log.d("DLCLog:", "测试单个驱动单元:" + dLCException.toString());
+                            }
+                        });
             }
         });
         findViewById(R.id.button_testing_all).setOnClickListener(new View.OnClickListener() {
@@ -107,18 +111,18 @@ public class TestActivity extends CustomAdaptActivity {
                 int cabinetAddress = Integer.parseInt(spacer.getSelectedItem().toString());
                 //货道扫描
                 VendingMachineAAProxy.get()
-                    .cargoTrackScanning(Priority.DEFAULT, 10, cabinetAddress, new ICommonCallback<List<TestingCabinetDriveBean>>() {
+                        .cargoTrackScanning(Priority.DEFAULT, 10, cabinetAddress, new ICommonCallback<List<TestingCabinetDriveBean>>() {
 
-                        @Override
-                        public void onSuccess(List<TestingCabinetDriveBean> testingSingleBean) {
-                            Log.d("DLCLog:",  "货道扫描:" + FastJsonUtil.toJSONString(testingSingleBean));
-                        }
+                            @Override
+                            public void onSuccess(List<TestingCabinetDriveBean> testingSingleBean) {
+                                Log.d("DLCLog:", "货道扫描:" + FastJsonUtil.toJSONString(testingSingleBean));
+                            }
 
-                        @Override
-                        public void onFailed(DLCException dLCException) {
-                            Log.d("DLCLog:", "货道扫描:" + dLCException.toString());
-                        }
-                    });
+                            @Override
+                            public void onFailed(DLCException dLCException) {
+                                Log.d("DLCLog:", "货道扫描:" + dLCException.toString());
+                            }
+                        });
             }
         });
         findViewById(R.id.button_sellingGoods).setOnClickListener(new View.OnClickListener() {
@@ -126,20 +130,21 @@ public class TestActivity extends CustomAdaptActivity {
             public void onClick(View v) {
                 int cabinetAddress = Integer.parseInt(spacer.getSelectedItem().toString());
                 //出售商品
+                int number = Integer.parseInt(et_number.getText().toString());
                 VendingMachineAAProxy.get()
-                    .sellingGoods(Priority.DEFAULT, cabinetAddress, et_number.getText().toString(), new ICommonCallback<SellingGoodsBean>() {
+                        .sellingGoods(Priority.DEFAULT, cabinetAddress, number, new ICommonCallback<SellingGoodsBean>() {
 
-                        @Override
-                        public void onSuccess(SellingGoodsBean testingSingleBean) {
-                            Log.d("DLCLog:", "出售商品:" + FastJsonUtil.toJSONString(testingSingleBean));
-                        }
+                            @Override
+                            public void onSuccess(SellingGoodsBean testingSingleBean) {
+                                Log.d("DLCLog:", "出售商品:" + FastJsonUtil.toJSONString(testingSingleBean));
+                            }
 
-                        @Override
-                        public void onFailed(DLCException dLCException) {
+                            @Override
+                            public void onFailed(DLCException dLCException) {
 
-                            Log.d("DLCLog:", "出售商品:" + dLCException.toString());
-                        }
-                    });
+                                Log.d("DLCLog:", "出售商品:" + dLCException.toString());
+                            }
+                        });
             }
         });
         findViewById(R.id.button_slaveStateQuery).setOnClickListener(new View.OnClickListener() {
@@ -167,20 +172,21 @@ public class TestActivity extends CustomAdaptActivity {
                 int max = Integer.parseInt(et_max.getText().toString());
                 int min = Integer.parseInt(et_min.getText().toString());
                 int cabinetAddress = Integer.parseInt(spacer.getSelectedItem().toString());
+                int probeNumber = Integer.parseInt(spacer3.getSelectedItem().toString());
                 //温度设置
                 VendingMachineAAProxy.get()
-                    .setTemperature(Priority.DEFAULT, cabinetAddress, min, max, spacer3.getSelectedItem().toString(), new ICommonCallback<String>() {
+                        .setTemperature(Priority.DEFAULT, cabinetAddress, min, max, probeNumber, new ICommonCallback<String>() {
 
-                        @Override
-                        public void onSuccess(String testingSingleBean) {
-                            Log.d("DLCLog:", "温度设置:" + FastJsonUtil.toJSONString(testingSingleBean));
-                        }
+                            @Override
+                            public void onSuccess(String testingSingleBean) {
+                                Log.d("DLCLog:", "温度设置:" + FastJsonUtil.toJSONString(testingSingleBean));
+                            }
 
-                        @Override
-                        public void onFailed(DLCException dLCException) {
-                            Log.d("DLCLog:", "温度设置:" + dLCException.toString());
-                        }
-                    });
+                            @Override
+                            public void onFailed(DLCException dLCException) {
+                                Log.d("DLCLog:", "温度设置:" + dLCException.toString());
+                            }
+                        });
             }
         });
         findViewById(R.id.button_temperatureQuery).setOnClickListener(new View.OnClickListener() {
@@ -188,19 +194,20 @@ public class TestActivity extends CustomAdaptActivity {
             public void onClick(View v) {
                 //温度查询
                 int cabinetAddress = Integer.parseInt(spacer.getSelectedItem().toString());
+                int probeNumber = Integer.parseInt(spacer3.getSelectedItem().toString());
                 VendingMachineAAProxy.get()
-                    .temperatureQuery(Priority.DEFAULT, cabinetAddress, spacer3.getSelectedItem().toString(), new ICommonCallback<TemperatureBean>() {
+                        .temperatureQuery(Priority.DEFAULT, cabinetAddress, probeNumber, new ICommonCallback<TemperatureBean>() {
 
-                        @Override
-                        public void onSuccess(TemperatureBean testingSingleBean) {
-                            Log.d("DLCLog:", "温度查询:" + FastJsonUtil.toJSONString(testingSingleBean));
-                        }
+                            @Override
+                            public void onSuccess(TemperatureBean testingSingleBean) {
+                                Log.d("DLCLog:", "温度查询:" + FastJsonUtil.toJSONString(testingSingleBean));
+                            }
 
-                        @Override
-                        public void onFailed(DLCException dLCException) {
-                            Log.d("DLCLog:", "温度查询:" + dLCException.toString());
-                        }
-                    });
+                            @Override
+                            public void onFailed(DLCException dLCException) {
+                                Log.d("DLCLog:", "温度查询:" + dLCException.toString());
+                            }
+                        });
             }
         });
         findViewById(R.id.button_firmwareVersionQuery).setOnClickListener(new View.OnClickListener() {
@@ -228,18 +235,18 @@ public class TestActivity extends CustomAdaptActivity {
                 //光检控制
                 int cabinetAddress = Integer.parseInt(spacer.getSelectedItem().toString());
                 VendingMachineAAProxy.get()
-                    .photometricControl(Priority.DEFAULT, cabinetAddress, checkbox.isChecked(), new ICommonCallback<Boolean>() {
+                        .photometricControl(Priority.DEFAULT, cabinetAddress, checkbox.isChecked(), new ICommonCallback<Boolean>() {
 
-                        @Override
-                        public void onSuccess(Boolean testingSingleBean) {
-                            Log.d("DLCLog:", "光检控制:" + FastJsonUtil.toJSONString(testingSingleBean));
-                        }
+                            @Override
+                            public void onSuccess(Boolean testingSingleBean) {
+                                Log.d("DLCLog:", "光检控制:" + FastJsonUtil.toJSONString(testingSingleBean));
+                            }
 
-                        @Override
-                        public void onFailed(DLCException dLCException) {
-                            Log.d("DLCLog:", "光检控制:" + dLCException.toString());
-                        }
-                    });
+                            @Override
+                            public void onFailed(DLCException dLCException) {
+                                Log.d("DLCLog:", "光检控制:" + dLCException.toString());
+                            }
+                        });
             }
         });
         spacer = findViewById(R.id.spacer);
