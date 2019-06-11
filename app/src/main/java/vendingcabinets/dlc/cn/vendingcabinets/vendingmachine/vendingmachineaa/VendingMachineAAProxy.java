@@ -1,11 +1,8 @@
 package vendingcabinets.dlc.cn.vendingcabinets.vendingmachine.vendingmachineaa;
 
 import android.content.Context;
-import android.media.MediaPlayer;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import vendingcabinets.dlc.cn.vendingcabinets.DLCLog;
 import vendingcabinets.dlc.cn.vendingcabinets.base.ICommonCallback;
 import vendingcabinets.dlc.cn.vendingcabinets.base.exception.DLCException;
@@ -43,8 +40,8 @@ public class VendingMachineAAProxy {
     private boolean checkInit(ICommonCallback iCommonCallback) {
         if (!isOpenSuccess) {
             if (iCommonCallback != null) {
-                iCommonCallback.onFailed(new DLCException(DLCExceptionCode.VENDING_MACHINE_AA_PROXY_ERROR,
-                        "串口为初始化,请先调用VendingMachineAAProxy.init(context)进行初始化"));
+                iCommonCallback.onFailed(
+                    new DLCException(DLCExceptionCode.VENDING_MACHINE_AA_PROXY_ERROR, "串口为初始化,请先调用VendingMachineAAProxy.init(context)进行初始化"));
             }
             return false;
         }
@@ -68,7 +65,8 @@ public class VendingMachineAAProxy {
         });
     }
 
-    private void send(@Priority int priority, byte[] allData, byte command, final ICommonCallback iCommonCallback, SendResultCallback sendResultCallback) {
+    private void send(@Priority int priority, byte[] allData, byte command, final ICommonCallback iCommonCallback,
+        SendResultCallback sendResultCallback) {
         if (!checkInit(iCommonCallback)) {
             return;
         }
@@ -87,8 +85,7 @@ public class VendingMachineAAProxy {
      * B5     ——  数据       0x01:ACK, 0x02:BUSY
      * B6     ——  校验码
      */
-    public void responseFrame(@Priority int priority, String cabinetAddress, String data, final ICommonCallback<String> iCommonCallback) {
-        data = ByteUtil.hexString(data, 1);
+    public void responseFrame(@Priority int priority, int cabinetAddress, int data, final ICommonCallback<String> iCommonCallback) {
         byte[] allData = VendingMachineAACmdFactory.responseFrame(cabinetAddress, data);
         send(priority, allData, VendingMachineAAProtocol.RESPONSE_FRAME_STH, iCommonCallback, new SendResultCallback() {
 
@@ -108,6 +105,7 @@ public class VendingMachineAAProxy {
             }
         });
     }
+    
 
     /**
      * 测试单个驱动单元      主 到 从 0x82
@@ -118,8 +116,8 @@ public class VendingMachineAAProxy {
      * B5     ——  电机编号
      * B6     ——  校验码
      */
-    public void testingSingleDrivers(@Priority int priority, String cabinetAddress, String motorNumber, final ICommonCallback<TestingSingleBean> iCommonCallback) {
-        motorNumber = ByteUtil.hexString(motorNumber, 1);
+    public void testingSingleDrivers(@Priority int priority, int cabinetAddress, int motorNumber,
+        final ICommonCallback<TestingSingleBean> iCommonCallback) {
         byte[] allData = VendingMachineAACmdFactory.testingSingleDrivers(cabinetAddress, motorNumber);
         send(priority, allData, VendingMachineAAProtocol.TESTING_SINGLE_DRIVER_STH, iCommonCallback, new SendResultCallback() {
 
@@ -148,7 +146,6 @@ public class VendingMachineAAProxy {
             }
         });
     }
-
     /**
      * 测试整柜驱动单元      主 到 从 0x83
      * B1     ——  地址       0x01—0X3F
@@ -157,7 +154,7 @@ public class VendingMachineAAProxy {
      * B4     ——  控制码     0x83
      * B5     ——  校验码
      */
-    public void testingCabinetDrive(@Priority int priority, String cabinetAddress, final ICommonCallback<String> iCommonCallback) {
+    public void testingCabinetDrive(@Priority int priority, int cabinetAddress, final ICommonCallback<String> iCommonCallback) {
         byte[] allData = VendingMachineAACmdFactory.testingCabinetDrive(cabinetAddress);
         send(priority, allData, VendingMachineAAProtocol.TESTING_CABINET_DRIVE_STH, iCommonCallback, new SendResultCallback() {
 
@@ -187,7 +184,8 @@ public class VendingMachineAAProxy {
      * B4     ——  控制码     0x85
      * B5     ——  校验码
      */
-    public void cargoTrackScanning(@Priority int priority, final int cargoWay, String cabinetAddress, final ICommonCallback<List<TestingCabinetDriveBean>> iCommonCallback) {
+    public void cargoTrackScanning(@Priority int priority, final int cargoWay, int cabinetAddress,
+        final ICommonCallback<List<TestingCabinetDriveBean>> iCommonCallback) {
         byte[] allData = VendingMachineAACmdFactory.testingCabinetDrive(cabinetAddress);
         send(priority, allData, VendingMachineAAProtocol.CARGO_TRACK_SCANNING_STH, iCommonCallback, new SendResultCallback() {
 
@@ -201,7 +199,8 @@ public class VendingMachineAAProxy {
                         break;
                     }
                     TestingCabinetDriveBean testingCabinetDriveBean = new TestingCabinetDriveBean();
-                    List<TestingCabinetDriveBean.TestingCabinetDrive> list = getTestingCabinetDriveList(cargoWay, data.substring(i, i + 1), data.substring(i + 1, i + 2));
+                    List<TestingCabinetDriveBean.TestingCabinetDrive> list =
+                        getTestingCabinetDriveList(cargoWay, data.substring(i, i + 1), data.substring(i + 1, i + 2));
                     testingCabinetDriveBean.setCargoWayId(i + 1);
                     testingCabinetDriveBean.setList(list);
                     testingCabinetDriveList.add(testingCabinetDriveBean);
@@ -220,7 +219,8 @@ public class VendingMachineAAProxy {
         });
     }
 
-    private List<TestingCabinetDriveBean.TestingCabinetDrive> getTestingCabinetDriveList(int cargoWay, String testingCabinetDriveOne, String testingCabinetDriveTwo) {
+    private List<TestingCabinetDriveBean.TestingCabinetDrive> getTestingCabinetDriveList(int cargoWay, String testingCabinetDriveOne,
+        String testingCabinetDriveTwo) {
         List<TestingCabinetDriveBean.TestingCabinetDrive> list = new ArrayList<>();
         String mTestingCabinetDriveOne = ByteUtil.hexStr2BitArr(testingCabinetDriveOne);
         String mTestingCabinetDriveTwo = ByteUtil.hexStr2BitArr(testingCabinetDriveTwo);
@@ -251,7 +251,8 @@ public class VendingMachineAAProxy {
      * B5     ——  电机编号
      * B6     ——  校验码
      */
-    public void sellingGoods(@Priority int priority, String cabinetAddress, String motorNumber, final ICommonCallback<SellingGoodsBean> iCommonCallback) {
+    public void sellingGoods(@Priority int priority, int cabinetAddress, String motorNumber,
+        final ICommonCallback<SellingGoodsBean> iCommonCallback) {
         motorNumber = ByteUtil.hexString(motorNumber, 1);
         byte[] allData = VendingMachineAACmdFactory.sellingGoods(cabinetAddress, motorNumber);
         send(priority, allData, VendingMachineAAProtocol.SELLING_GOODS_STH, iCommonCallback, new SendResultCallback() {
@@ -290,7 +291,7 @@ public class VendingMachineAAProxy {
      * B4     ——  控制码     0x87
      * B5     ——  校验码
      */
-    public void slaveStateQuery(@Priority int priority, String cabinetAddress, final ICommonCallback<SlaveStateBean> iCommonCallback) {
+    public void slaveStateQuery(@Priority int priority, int cabinetAddress, final ICommonCallback<SlaveStateBean> iCommonCallback) {
         byte[] allData = VendingMachineAACmdFactory.slaveStateQuery(cabinetAddress);
         send(priority, allData, VendingMachineAAProtocol.SLAVE_STATE_QUERY_STH, iCommonCallback, new SendResultCallback() {
 
@@ -394,8 +395,8 @@ public class VendingMachineAAProxy {
      * B7     ——  最大值
      * B8     ——  校验码
      */
-    public void setTemperature(@Priority int priority, String cabinetAddress, int minimum,
-                               int maximum, String probeNumber, final ICommonCallback<String> iCommonCallback) {
+    public void setTemperature(@Priority int priority, int cabinetAddress, int minimum, int maximum, String probeNumber,
+        final ICommonCallback<String> iCommonCallback) {
 
         String maxi = ByteUtil.integer2HexStr(maximum);
         String mini = ByteUtil.integer2HexStr(minimum);
@@ -411,7 +412,6 @@ public class VendingMachineAAProxy {
                 if (iCommonCallback != null) {
                     iCommonCallback.onSuccess(ByteUtil.hexStr2decimalStr(data.substring(0, 1)));
                 }
-
             }
 
             @Override
@@ -432,7 +432,8 @@ public class VendingMachineAAProxy {
      * B5     ——  探头编号   1 - 4        1-2：制冷     3-4：制热
      * B6     ——  校验码
      */
-    public void temperatureQuery(@Priority int priority, String cabinetAddress, String probeNumber, final ICommonCallback<TemperatureBean> iCommonCallback) {
+    public void temperatureQuery(@Priority int priority, int cabinetAddress, String probeNumber,
+        final ICommonCallback<TemperatureBean> iCommonCallback) {
         String data = ByteUtil.hexString(probeNumber, 1);
         byte[] allData = VendingMachineAACmdFactory.setTemperature(cabinetAddress, data);
         send(priority, allData, VendingMachineAAProtocol.TEMPERATURE_QUERY_STH, iCommonCallback, new SendResultCallback() {
@@ -471,7 +472,7 @@ public class VendingMachineAAProxy {
      * B4     ——  控制码     0x8B
      * B5     ——  校验码
      */
-    public void firmwareVersionQuery(@Priority int priority, String cabinetAddress, final ICommonCallback<String> iCommonCallback) {
+    public void firmwareVersionQuery(@Priority int priority, int cabinetAddress, final ICommonCallback<String> iCommonCallback) {
         byte[] allData = VendingMachineAACmdFactory.firmwareVersionQuery(cabinetAddress);
         send(priority, allData, VendingMachineAAProtocol.FIRMWARE_VERSION_QUERY_STH, iCommonCallback, new SendResultCallback() {
 
@@ -504,7 +505,8 @@ public class VendingMachineAAProxy {
      * 1：开启光检
      * B6     ——  校验码
      */
-    public void photometricControl(@Priority int priority, String cabinetAddress, boolean isOpenCandling, final ICommonCallback<Boolean> iCommonCallback) {
+    public void photometricControl(@Priority int priority, int cabinetAddress, boolean isOpenCandling,
+        final ICommonCallback<Boolean> iCommonCallback) {
         String openCandling = isOpenCandling ? "1" : "0";
         String data = ByteUtil.hexString(openCandling, 1);
         byte[] allData = VendingMachineAACmdFactory.photometricControl(cabinetAddress, data);
@@ -528,5 +530,4 @@ public class VendingMachineAAProxy {
             }
         });
     }
-
 }

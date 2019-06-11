@@ -1,17 +1,14 @@
 package vendingcabinets.dlc.cn.vendingcabinets.base.serialport;
 
 import android.os.SystemClock;
-
 import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-
 import vendingcabinets.dlc.cn.vendingcabinets.DLCLog;
-import vendingcabinets.dlc.cn.vendingcabinets.base.serialport.blockingqueue.BaseQueue;
-import vendingcabinets.dlc.cn.vendingcabinets.base.serialport.blockingqueue.Priority;
 import vendingcabinets.dlc.cn.vendingcabinets.base.exception.DLCException;
 import vendingcabinets.dlc.cn.vendingcabinets.base.exception.DLCExceptionCode;
+import vendingcabinets.dlc.cn.vendingcabinets.base.serialport.blockingqueue.BaseQueue;
+import vendingcabinets.dlc.cn.vendingcabinets.base.serialport.blockingqueue.Priority;
 import vendingcabinets.dlc.cn.vendingcabinets.base.serialport.utils.ByteUtil;
 
 /**
@@ -22,13 +19,16 @@ import vendingcabinets.dlc.cn.vendingcabinets.base.serialport.utils.ByteUtil;
 public class CmdTask extends BaseQueue {
     private SendResultCallback mSendResultCallback;
     private CmdPack mCmdPack;
-    private SerialPort mSerialPort;
     private BaseDataCallback mBaseDataCallback;
+    private BufferedInputStream mBufferedInputStream;
+    private OutputStream mOutputStream;
 
-    public CmdTask(@Priority int priority, SendResultCallback mSendResultCallback, CmdPack mCmdPack, SerialPort mSerialPort, BaseDataCallback baseDataCallback) {
+    public CmdTask(@Priority int priority, SendResultCallback mSendResultCallback, CmdPack mCmdPack, OutputStream outputStream,
+        BufferedInputStream bufferedInputStream, BaseDataCallback baseDataCallback) {
         this.mSendResultCallback = mSendResultCallback;
         this.mCmdPack = mCmdPack;
-        this.mSerialPort = mSerialPort;
+        mBufferedInputStream = bufferedInputStream;
+        mOutputStream = outputStream;
         this.mBaseDataCallback = baseDataCallback;
         setPriority(priority);
     }
@@ -45,48 +45,42 @@ public class CmdTask extends BaseQueue {
         // 记录一下发送后的时间，用来判断接收数据是否超时
         long sendTime = SystemClock.uptimeMillis();
         long waitTime = 0;
+        DataPack dataPack = null;
         while (isRunning) {
-            InputStream inputStream = mSerialPort.getInputStream();
-            if (inputStream == null) {
-                if (mSendResultCallback != null) {
-                    mSendResultCallback.onFailed(new DLCException(DLCExceptionCode.SERIAL_PORT_ERROR, "串口获取,InputStream为null:"));
-                    return;
-                }
-            }
-            BufferedInputStream mInputStream = new BufferedInputStream(mSerialPort.getInputStream());
+
             try {
-                DataPack dataPack = null;
-                if (mInputStream.available() > 0) {
+
+                if (mBufferedInputStream.available() > 0) {
                     // 更新一下接收数据时间
                     waitTime = SystemClock.uptimeMillis();
                     byte[] received = new byte[2048];
-                    size = mInputStream.read(received);
+                    size = mBufferedInputStream.read(received);
+                    DLCLog.d("原始接收数据" + ByteUtil.bytes2HexStr(received));
                     dataPack = mBaseDataCallback.checkData(received, size);
+
+                    if (dataPack != null) {
+                        //命令码
+                        String command = ByteUtil.bytes2HexStr(new byte[mCmdPack.getCheckCommand()]);
+                        String readCommand = ByteUtil.bytes2HexStr(new byte[dataPack.getCommand()]);
+                        if (readCommand.equalsIgnoreCase(command)) {
+                            if (mSendResultCallback != null) {
+                                mSendResultCallback.onSuccess(dataPack);
+                            }
+                        } else {
+                            if (mSendResultCallback != null) {
+                                mSendResultCallback.onFailed(new DLCException(DLCExceptionCode.SERIAL_PORT_ERROR,
+                                    "命令码不同,获取到结果为:" + dataPack.toString() + "--校验命令码:" + command));
+                            }
+                        }
+
+                        return;
+                    }
                 } else {
                     // 暂停一点时间，免得一直循环造成CPU占用率过高
                     SystemClock.sleep(1);
                 }
                 // 检查释放超市
                 boolean isTimeOut = isTimeOut(sendTime, waitTime);
-                if (dataPack != null) {
-                    //命令码
-                    String command =
-                            ByteUtil.bytes2HexStr(new byte[mCmdPack.getCheckCommand()]);
-                    String readCommand =
-                            ByteUtil.bytes2HexStr(new byte[dataPack.getCommand()]);
-                    if (readCommand.equalsIgnoreCase(command)) {
-                        if (mSendResultCallback != null) {
-                            mSendResultCallback.onSuccess(dataPack);
-                        }
-                    } else {
-                        if (mSendResultCallback != null) {
-                            mSendResultCallback.onFailed(new DLCException(DLCExceptionCode.SERIAL_PORT_ERROR,
-                                    "命令码不同,获取到结果为:" + dataPack.toString() + "--校验命令码:" + command));
-                        }
-                    }
-
-                    return;
-                }
                 if (isTimeOut) {
                     if (mSendResultCallback != null) {
                         mSendResultCallback.onFailed(new DLCException(DLCExceptionCode.SERIAL_PORT_ERROR, "读取超时"));
@@ -116,15 +110,8 @@ public class CmdTask extends BaseQueue {
 
     private boolean sendData() {
         try {
-            OutputStream outputStream = mSerialPort.getOutputStream();
-            if (outputStream == null) {
-                if (mSendResultCallback != null) {
-                    mSendResultCallback.onFailed(new DLCException(DLCExceptionCode.SERIAL_PORT_ERROR, "串口获取,OutputStream为null"));
-                }
-                return false;
-            }
             SystemClock.sleep(100);
-            outputStream.write(mCmdPack.getSendData());
+            mOutputStream.write(mCmdPack.getSendData());
             DLCLog.d("发送码:" + ByteUtil.bytes2HexStr(mCmdPack.getSendData()));
         } catch (IOException e) {
             if (mSendResultCallback != null) {
@@ -134,5 +121,4 @@ public class CmdTask extends BaseQueue {
         }
         return true;
     }
-
 }

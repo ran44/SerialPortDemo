@@ -1,6 +1,6 @@
 package vendingcabinets.dlc.cn.vendingcabinets;
 
-
+import android.util.Log;
 import com.orhanobut.logger.Logger;
 
 /**
@@ -21,7 +21,7 @@ public class DLCLog {
 
     public static void d(String message) {
         if (isLog) {
-            Logger.d("DLCLog:", message);
+            Log.d("DLCLog:", message);
         }
     }
 

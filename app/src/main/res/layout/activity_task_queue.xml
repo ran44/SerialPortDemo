@@ -43,17 +43,13 @@
         android:id="@+id/button_6"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:text="调试弹簧售货柜发送命令" />
+        android:text="暂停" />
 
     <Button
         android:id="@+id/button_7"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:text="测试队列任务" />
+        android:text="启动" />
 
-    <Button
-        android:id="@+id/button_8"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:text="调试弹簧售货柜" />
+   
 </LinearLayout>

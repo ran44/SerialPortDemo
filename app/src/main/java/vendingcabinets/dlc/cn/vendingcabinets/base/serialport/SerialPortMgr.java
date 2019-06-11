@@ -1,14 +1,15 @@
 package vendingcabinets.dlc.cn.vendingcabinets.base.serialport;
 
+import android.serialport.SerialPort;
 import android.text.TextUtils;
-
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
-
-import vendingcabinets.dlc.cn.vendingcabinets.base.serialport.blockingqueue.AbstractTaskQueue;
-import vendingcabinets.dlc.cn.vendingcabinets.base.serialport.blockingqueue.Priority;
+import java.io.OutputStream;
 import vendingcabinets.dlc.cn.vendingcabinets.base.exception.DLCException;
 import vendingcabinets.dlc.cn.vendingcabinets.base.exception.DLCExceptionCode;
+import vendingcabinets.dlc.cn.vendingcabinets.base.serialport.blockingqueue.AbstractTaskQueue;
+import vendingcabinets.dlc.cn.vendingcabinets.base.serialport.blockingqueue.Priority;
 
 /**
  * @author :      fangbingran
@@ -19,7 +20,9 @@ public class SerialPortMgr {
     private static class InstanceSerialPortMgr {
         private static final SerialPortMgr INSTANCE = new SerialPortMgr();
     }
+
     public static final boolean BYPASS_METADATA_FILTER = false;
+
     public static SerialPortMgr get() {
         return InstanceSerialPortMgr.INSTANCE;
     }
@@ -28,9 +31,10 @@ public class SerialPortMgr {
     private AbstractTaskQueue mAbstractTaskQueue;
     private boolean isStart = false;
     private BaseDataCallback mBaseDataCallback;
+    private OutputStream mOutputStream;
+    private BufferedInputStream mBufferedInputStream;
 
-    public void init(String deviceAddress, int baudRate, BaseDataCallback baseDataCallback,
-                     SerialPortCallback serialPortCallback) {
+    public void init(String deviceAddress, int baudRate, BaseDataCallback baseDataCallback, SerialPortCallback serialPortCallback) {
         if (TextUtils.isEmpty(deviceAddress)) {
             throw new DLCException(DLCExceptionCode.SERIAL_PORT_ERROR, "串口地址不为null");
         }
@@ -45,15 +49,17 @@ public class SerialPortMgr {
         try {
             File device = new File(deviceAddress);
             mSerialPort = new SerialPort(device, baudRate, 0);
+            mOutputStream = mSerialPort.getOutputStream();
+            if (mSerialPort.getInputStream() != null) {
+                mBufferedInputStream = new BufferedInputStream(mSerialPort.getInputStream());
+            }
             serialPortCallback.onOpenSuccess();
             startTaskQueue();
         } catch (Exception e) {
             serialPortCallback.onOpenError(deviceAddress, baudRate, new DLCException(DLCExceptionCode.SERIAL_PORT_ERROR, "串口打开异常:" + e.toString()));
             mSerialPort = null;
         }
-
     }
-
 
     private void startTaskQueue() {
         if (mAbstractTaskQueue == null) {
@@ -82,7 +88,20 @@ public class SerialPortMgr {
             }
             return;
         }
-        CmdTask cmdTask = new CmdTask(priority, sendResultCallback, cmdPack, mSerialPort, mBaseDataCallback);
+
+        if (mOutputStream == null) {
+            if (sendResultCallback != null) {
+                sendResultCallback.onFailed(new DLCException(DLCExceptionCode.SERIAL_PORT_ERROR, "串口获取,OutputStream为null"));
+            }
+            return;
+        }
+        if (mBufferedInputStream == null) {
+            if (sendResultCallback != null) {
+                sendResultCallback.onFailed(new DLCException(DLCExceptionCode.SERIAL_PORT_ERROR, "串口获取,InputStream为null:"));
+                return;
+            }
+        }
+        CmdTask cmdTask = new CmdTask(priority, sendResultCallback, cmdPack, mOutputStream, mBufferedInputStream, mBaseDataCallback);
         if (mAbstractTaskQueue == null) {
             startTaskQueue();
         }
@@ -96,18 +115,35 @@ public class SerialPortMgr {
     public void closeSerialPort() {
         if (mSerialPort != null) {
             try {
-                mSerialPort.getOutputStream().close();
+                if (mSerialPort.getOutputStream() != null) {
+                    mSerialPort.getOutputStream().close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
             try {
-                mSerialPort.getInputStream().close();
+                if (mSerialPort.getInputStream() != null) {
+                    mSerialPort.getInputStream().close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
             mSerialPort.close();
             mSerialPort = null;
         }
+        if (mOutputStream != null) {
+            try {
+                mOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (mBufferedInputStream != null) {
+            try {
+                mBufferedInputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
-
 }
